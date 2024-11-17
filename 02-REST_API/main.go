@@ -6,9 +6,10 @@ import (
 
 func main() {
 	var err error
-	server := server.New(":8080")
 
-	err = server.ListenAndServe()
+	srv := server.New(":8080")
+
+	err = srv.ListenAndServe()
 
 	if err != nil {
 		panic(err)
