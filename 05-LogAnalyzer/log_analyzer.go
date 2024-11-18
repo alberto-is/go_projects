@@ -36,68 +36,70 @@ func initFlags() {
 
 	flag.Parse()
 }
-func main() {
-	n_errors := 0
-	n_warns := 0
-	n_info := 0
-	n_line := 1
-	sliceLogs := make([]string, 0)
 
-	initFlags()
+func processLogFile(filename string) ([]string, map[string]int) {
 	logFile, err := os.Open("logs/log.txt")
 	if err != nil {
 		log.Panicf("ERROR	Failed to open logFile: %v", err)
 	}
 	defer logFile.Close()
 
+	logs := make([]string, 0)
+	counts := map[string]int{"ERROR": 0, "WARN": 0, "INFO": 0}
+
+	n_line := 1
 	scanner := bufio.NewScanner(logFile)
 	for scanner.Scan() {
-		sliceLogs = append(sliceLogs, scanner.Text())
+		logs = append(logs, scanner.Text())
 		typeLog, err := analyzer.SearchToken(scanner.Text())
 		if err != nil {
 			log.Printf("\n\nWARN    Warn reading the log file, Line %d: %v\n\n", n_line, err)
-		} else {
-			switch typeLog {
-			case "ERROR":
-				n_errors++
-			case "WARN":
-				n_warns++
-			case "INFO":
-				n_info++
-			}
+			continue
+
 		}
+		counts[typeLog]++
 		n_line++
 	}
+
+	if err := scanner.Err(); err != nil {
+		log.Fatalf("ERROR: Failed to scan the log file: %v", err)
+	}
+
+	return logs, counts
+}
+
+func printFilteredLogs(logs []string, logType string) {
+	fmt.Printf("\n%s Logs:\n", logType)
+	for _, log := range logs {
+		if strings.Contains(log, logType) {
+			fmt.Println(log)
+		}
+	}
+}
+
+func main() {
+	initFlags()
+
+	logs, counts := processLogFile("logs/log.txt")
+
 	if all {
-		for _, log := range sliceLogs {
+		fmt.Println("All Logs:")
+		for _, log := range logs {
 			fmt.Println(log)
 		}
 	}
 	if eror {
-		for _, log := range sliceLogs {
-			if strings.Contains(log, "ERROR") {
-				fmt.Println(log)
-			}
-		}
+		printFilteredLogs(logs, "ERROR")
 	}
 	if warn {
-		for _, log := range sliceLogs {
-			if strings.Contains(log, "WARN") {
-				fmt.Println(log)
-			}
-		}
+		printFilteredLogs(logs, "WARN")
 	}
-
 	if info {
-		for _, log := range sliceLogs {
-			if strings.Contains(log, "INFO") {
-				fmt.Println(log)
-			}
-		}
+		printFilteredLogs(logs, "INFO")
 	}
 
 	if count {
-		fmt.Printf("Numer of ERRORS:%d Number of WARNS:%d Numer of INFO:%d \n", n_errors, n_warns, n_info)
+		fmt.Printf("\nLog Counts:\nERROR: %d\nWARN: %d\nINFO: %d\n", counts["ERROR"], counts["WARN"], counts["INFO"])
 	}
 
 }
