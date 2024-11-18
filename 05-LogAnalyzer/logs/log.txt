@@ -1,4 +1,4 @@
-2024-11-18 10:15:32 INF    User "john_doe" logged in successfully.
+2024-11-18 10:15:32 INFO    User "john_doe" logged in successfully.
 2024-11-18 10:15:35 WARN    Disk usage at 85%.
 2024-11-18 10:16:01 ERROR   Failed to connect to database: timeout.
 2024-11-18 10:16:45 INFO    File "report.pdf" uploaded by user "jane_doe".
