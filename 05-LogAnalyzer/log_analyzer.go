@@ -12,7 +12,6 @@ import (
 
 var (
 	count bool
-	all   bool
 	eror  bool
 	warn  bool
 	info  bool
@@ -21,9 +20,6 @@ var (
 func initFlags() {
 	flag.BoolVar(&count, "count", false, "Show the total count of each log type")
 	flag.BoolVar(&count, "c", false, "Show the total count of each log type (short)")
-
-	flag.BoolVar(&all, "all", false, "Show all log entries")
-	flag.BoolVar(&all, "a", false, "Show all log entries (short)")
 
 	flag.BoolVar(&eror, "error", false, "Show only ERROR logs")
 	flag.BoolVar(&eror, "e", false, "Show only ERROR logs (short)")
@@ -38,7 +34,7 @@ func initFlags() {
 }
 
 func processLogFile(filename string) ([]string, map[string]int) {
-	logFile, err := os.Open("logs/log.txt")
+	logFile, err := os.Open(filename)
 	if err != nil {
 		log.Panicf("ERROR	Failed to open logFile: %v", err)
 	}
@@ -82,7 +78,7 @@ func main() {
 
 	logs, counts := processLogFile("logs/log.txt")
 
-	if all {
+	if !eror && !warn && !info {
 		fmt.Println("All Logs:")
 		for _, log := range logs {
 			fmt.Println(log)
@@ -99,7 +95,7 @@ func main() {
 	}
 
 	if count {
-		fmt.Printf("\nLog Counts:\nERROR: %d\nWARN: %d\nINFO: %d\n", counts["ERROR"], counts["WARN"], counts["INFO"])
+		fmt.Printf("\nLog Counts: \nERROR: %d WARN: %d INFO: %d\n", counts["ERROR"], counts["WARN"], counts["INFO"])
 	}
 
 }
