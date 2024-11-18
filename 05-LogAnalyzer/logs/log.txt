@@ -1,0 +1,8 @@
+2024-11-18 10:15:32 INF    User "john_doe" logged in successfully.
+2024-11-18 10:15:35 WARN    Disk usage at 85%.
+2024-11-18 10:16:01 ERROR   Failed to connect to database: timeout.
+2024-11-18 10:16:45 INFO    File "report.pdf" uploaded by user "jane_doe".
+2024-11-18 10:17:10 INFO    Scheduled task "backup" completed successfully.
+2024-11-18 10:18:05 ERROR   Unable to send email to "admin@example.com": SMTP server unreachable.
+2024-11-18 10:18:30 WARN    High memory usage detected: 92%.
+2024-11-18 10:19:00 INFO    User "john_doe" logged out.
