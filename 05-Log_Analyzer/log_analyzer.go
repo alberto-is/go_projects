@@ -5,7 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	analyzer "loganalyzer/Analyzer"
+	"loganalyzer/analyzer"
 	"os"
 	"strings"
 )
