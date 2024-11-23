@@ -13,8 +13,8 @@ func main() {
 	router.GET("/users", servers.GetUsers)
 	router.GET("/users/:id", servers.GetUser)
 	router.POST("/users", servers.PostUser)
-	// router.PUT("/users", servers.PutUser)
-	// router.DELETE("/users/:id", servers.DeleteUser)
+	router.PUT("/users", servers.PutUser)
+	router.DELETE("/users/:id", servers.DeleteUser)
 	router.Run(":8080")
 
 }

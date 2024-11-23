@@ -127,6 +127,41 @@ func InsertUser(name string, age int) (int, error) {
 	return id, nil
 }
 
+func UpdateUser(user User) error {
+	db, err := GetConnection()
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer db.Close()
+	sqlStatement := `
+	UPDATE users
+	SET name = $2, age = $3
+	WHERE id = $1
+	`
+	_, err = db.Exec(sqlStatement, user.ID, user.Name, user.Age)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func DeleteUserByID(id int) error {
+	db, err := GetConnection()
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer db.Close()
+	sqlStatement := `
+	DELETE FROM users
+	WHERE id = $1
+	`
+	_, err = db.Exec(sqlStatement, id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 // NOTE: Test only
 func InitTable() {
 	DropTable()

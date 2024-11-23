@@ -52,27 +52,27 @@ func PostUser(c *gin.Context) {
 	c.IndentedJSON(http.StatusCreated, user)
 }
 
-// func PutUser(c *gin.Context) {
-// 	var user User
-// 	if err := c.BindJSON(&user); err != nil {
-// 		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "Invalid user data"})
-// 	}
+func PutUser(c *gin.Context) {
+	var user db.User
+	if err := c.BindJSON(&user); err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "Invalid user data"})
+	}
 
-// 	if err := updateUser(user); err != nil {
-// 		c.IndentedJSON(http.StatusNotFound, gin.H{"error": err.Error()})
-// 	}
-// 	c.Status(http.StatusNoContent)
-// }
+	if err := db.UpdateUser(user); err != nil {
+		c.IndentedJSON(http.StatusNotFound, gin.H{"error": err.Error()})
+	}
+	c.Status(http.StatusNoContent)
+}
 
-// func DeleteUser(c *gin.Context) {
-// 	id, err := strconv.Atoi(c.Param("id"))
-// 	if err != nil {
-// 		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
-// 		return
-// 	}
-// 	if err := deleteUserByID(id); err != nil {
-// 		c.IndentedJSON(http.StatusNotFound, gin.H{"error": err.Error()})
-// 		return
-// 	}
-// 	c.Status(http.StatusNoContent)
-// }
+func DeleteUser(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
+		return
+	}
+	if err := db.DeleteUserByID(id); err != nil {
+		c.IndentedJSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+	c.Status(http.StatusNoContent)
+}
