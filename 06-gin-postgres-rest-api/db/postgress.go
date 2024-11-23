@@ -163,10 +163,10 @@ func DeleteUserByID(id int) error {
 }
 
 // NOTE: Test only
-func InitTable() {
-	DropTable()
-	CreateTable()
-	InsertUser("Alice", 25)
-	InsertUser("Bob", 30)
-	InsertUser("Charlie", 35)
-}
+// func InitTable() {
+// 	DropTable()
+// 	CreateTable()
+// 	InsertUser("Alice", 25)
+// 	InsertUser("Bob", 30)
+// 	InsertUser("Charlie", 35)
+// }

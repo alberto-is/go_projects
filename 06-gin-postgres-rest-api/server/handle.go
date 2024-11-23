@@ -8,58 +8,57 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// NOTE: Test only
-func InitDB() {
-	db.InitTable()
-}
+// func InitDB() {
+// 	db.InitTable()
+// }
 
-// Note: Change to c.JSON(http.StatusOK, users) for better performance
 func GetUsers(c *gin.Context) {
 	users, err := db.GetUsers()
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	c.IndentedJSON(http.StatusOK, users) // c.JSON(http.StatusOK, users) IS better for performance, but c.IndentedJSON is better for debugging
+	c.JSON(http.StatusOK, users)
 }
-
 func GetUser(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
 		return
 	}
-	user, errr := db.GetUserByID(id)
-	if errr != nil {
-		c.IndentedJSON(http.StatusNotFound, gin.H{"error": errr.Error()})
+	user, err := db.GetUserByID(id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
-	c.IndentedJSON(http.StatusOK, user)
+	c.JSON(http.StatusOK, user)
 }
 
 func PostUser(c *gin.Context) {
 	var user db.User
 	if err := c.BindJSON(&user); err != nil {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "Invalid user data"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user data"})
 		return
 	}
 	userID, err := db.InsertUser(user.Name, user.Age)
 	if err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 	user.ID = userID
-	c.IndentedJSON(http.StatusCreated, user)
+	c.JSON(http.StatusCreated, user)
 }
 
 func PutUser(c *gin.Context) {
 	var user db.User
 	if err := c.BindJSON(&user); err != nil {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "Invalid user data"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user data"})
+		return
 	}
 
 	if err := db.UpdateUser(user); err != nil {
-		c.IndentedJSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
 	}
 	c.Status(http.StatusNoContent)
 }
@@ -67,11 +66,11 @@ func PutUser(c *gin.Context) {
 func DeleteUser(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
 		return
 	}
 	if err := db.DeleteUserByID(id); err != nil {
-		c.IndentedJSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
 	c.Status(http.StatusNoContent)

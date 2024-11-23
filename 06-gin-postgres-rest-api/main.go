@@ -8,7 +8,7 @@ import (
 
 func main() {
 
-	//go.SetMode(gin.ReleaseMode) // Uncomment this line to set the mode to release
+	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 	router.GET("/users", servers.GetUsers)
 	router.GET("/users/:id", servers.GetUser)
